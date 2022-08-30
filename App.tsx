@@ -5,6 +5,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { RecipesProvider } from './src/context/Recipes';
+
 import { useLogging } from './src/hooks/useLogging';
 
 import {
@@ -14,19 +16,12 @@ import {
   AccountScreen,
 } from './src/screens';
 
-import testData from './src/recipes.json';
-
 import { RootStackParamList } from './src/types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  const [data, setData] = useState<Object[]>([]);
   const [logging] = useLogging('Application');
-
-  useEffect(() => {
-    //setData([testData]);
-  });
 
   useEffect(() => {
     logging.info('Loading application');
@@ -34,15 +29,17 @@ export default function App() {
 
   // return <RecipesApp ref={(navigator) => setNavigator(navigator)} />;
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Recipes">
-        <Stack.Screen name="Recipes" component={RecipesScreen} />
-        <Stack.Screen
-          name="RecipeDetail"
-          component={RecipeDetailScreen}
-          options={{ title: 'Recipe Details' }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <RecipesProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Recipes">
+          <Stack.Screen name="Recipes" component={RecipesScreen} />
+          <Stack.Screen
+            name="RecipeDetail"
+            component={RecipeDetailScreen}
+            options={{ title: 'Recipe Details' }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </RecipesProvider>
   );
 }

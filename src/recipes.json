@@ -34,5 +34,31 @@
       "protein": "6.7 g"
     },
     "photos": ["./image_pancakes.jpeg"]
+  },
+  {
+    "name": "Cereal",
+    "category": "Breakfast",
+    "serving-size": "1 bowl",
+    "prep-time": "1 mins",
+    "cook-time": "NA",
+    "ingredients": ["milk", "cereal"],
+    "directions": [
+      "Pour cereal into bowl",
+      "Pour milk into bowl",
+      "Eat."
+    ],
+    "nutrition": {
+      "serving-size": "1 cup cereal",
+      "calories": 150,
+      "total-fat": "1.4 g",
+      "saturated-fat": "0.4 g",
+      "cholesterol": "10 mg",
+      "sodium": "114 mg",
+      "total-carbs": "22.4 g",
+      "dietary-fiber": "1 g",
+      "sugars": "3.9 g",
+      "protein": "1.7 g"
+    },
+    "photos": ["./image_pancakes.jpeg"]
   }
 ]

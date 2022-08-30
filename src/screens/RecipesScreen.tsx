@@ -1,16 +1,44 @@
-import React from 'react';
-import { View, FlatList, Text, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  FlatList,
+  Text,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
+
+import { useRecipes } from '../context/Recipes';
+
 import { RecipesProps } from '../types';
 
 const RecipesScreen = ({ route, navigation }: RecipesProps) => {
-  console.log(route, navigation);
+  const {
+    state: { recipes },
+    recipesLoad,
+  } = useRecipes();
+
+  useEffect(() => {
+    recipesLoad();
+  }, []);
+
   return (
     <>
       <View>
         <Text>Recipes Screen</Text>
-        <Button
-          title="Go to details"
-          onPress={() => navigation.navigate('RecipeDetail')}
+        <FlatList
+          data={recipes}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('RecipeDetail', {
+                  name: item.name,
+                })
+              }
+            >
+              <Text>{item.name}</Text>
+            </TouchableOpacity>
+          )}
         />
       </View>
     </>
