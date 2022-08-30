@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Pancakes",
+    "category": "Breakfast",
+    "serving-size": "8-12 pancakes",
+    "prep-time": "5 mins",
+    "cook-time": "15 mins",
+    "ingredients": [
+      "3 cups all purpose flower",
+      "3 teaspoons baking powder",
+      "1 tablespoons casting sugar",
+      "1.5 cups milk",
+      "3 eggs",
+      "0.5 teaspoons salt"
+    ],
+    "directions": [
+      "Sift the flower, baking powder, salt and caster sugar into a bowl",
+      "Break the eggs into a separate bowl and whisk together with the milk",
+      "Gradually add the milk and egg mixture to the flour mixture and whisk to a smooth batter",
+      "Heat a frying pan over a medium heat and melt a small knob of butter. Pour the batter into the pan, using approximately 0.25 cups for each pancake",
+      "When the top of the pancake begins to bubble, turn and cook the other side until golden brown",
+      "Serve with butter and maple syrup"
+    ],
+    "nutrition": {
+      "serving-size": "1 pancake",
+      "calories": 180,
+      "total-fat": "2.4 g",
+      "saturated-fat": "0.9 g",
+      "cholesterol": "52 mg",
+      "sodium": "154 mg",
+      "total-carbs": "32.4 g",
+      "dietary-fiber": "1 g",
+      "sugars": "3.1 g",
+      "protein": "6.7 g"
+    },
+    "photos": ["./image_pancakes.jpeg"]
+  }
+]
