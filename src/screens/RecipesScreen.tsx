@@ -5,7 +5,9 @@ import {
   Text,
   Button,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 import { useRecipes } from '../context/Recipes';
 
@@ -23,7 +25,7 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
 
   return (
     <>
-      <View>
+      <View style={styles.container}>
         <Text>Recipes Screen</Text>
         <FlatList
           data={recipes}
@@ -40,9 +42,19 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
             </TouchableOpacity>
           )}
         />
+        <StatusBar style="auto" />
       </View>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 export default RecipesScreen;
