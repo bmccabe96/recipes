@@ -3,13 +3,17 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   TextInput,
   Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { User } from 'firebase/auth';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
+
+const auth = getAuth();
 
 interface UserInput {
   email: string;
@@ -17,15 +21,16 @@ interface UserInput {
   error: string;
 }
 
-//TODO
-const SignUpScreen: React.FC<NativeStackScreenProps<any>> = () => {
+const SignUpScreen: React.FC<NativeStackScreenProps<any>> = ({
+  navigation,
+}) => {
   const [value, setValue] = useState<UserInput>({
     email: '',
     password: '',
     error: '',
   });
 
-  const signUp = (): void => {
+  const signUp = async () => {
     if (value.email === '' || value.password === '') {
       setValue({
         ...value,
@@ -34,37 +39,60 @@ const SignUpScreen: React.FC<NativeStackScreenProps<any>> = () => {
       return;
     }
 
-    setValue({
-      ...value,
-      error: '',
-    });
+    try {
+      await createUserWithEmailAndPassword(
+        auth,
+        value.email,
+        value.password
+      );
+      navigation.navigate('Sign in');
+    } catch (e: any) {
+      setValue({
+        ...value,
+        error: e.message,
+      });
+    }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {!!value.error && (
         <View style={styles.error}>
           <Text>{value.error}</Text>
         </View>
       )}
       <View style={styles.controls}>
-        <TextInput
-          placeholder="email"
-          style={styles.input}
-          value={value.email}
-          onChangeText={(text) => setValue({ ...value, email: text })}
-        />
-        <TextInput
-          placeholder="password"
-          style={styles.input}
-          value={value.password}
-          onChangeText={(text) =>
-            setValue({ ...value, password: text })
-          }
-        />
+        <View style={styles.row}>
+          <Icon name="envelope" size={16} />
+          <TextInput
+            placeholder="email"
+            style={styles.input}
+            value={value.email}
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={(text) =>
+              setValue({ ...value, email: text })
+            }
+          />
+        </View>
+
+        <View style={styles.row}>
+          <Icon name="key" size={16} />
+          <TextInput
+            placeholder="password"
+            style={styles.input}
+            value={value.password}
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={(text) =>
+              setValue({ ...value, password: text })
+            }
+          />
+        </View>
+
         <Button title="Sign up" onPress={signUp} />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -83,6 +111,12 @@ const styles = StyleSheet.create({
 
   control: {
     marginTop: 10,
+  },
+
+  row: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
   },
 
   input: {
