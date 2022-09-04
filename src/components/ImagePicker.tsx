@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Image, View, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from 'firebase/storage';
 
-export default function ImagePickerExample() {
+const ImagePickerExample: React.FC<any> = () => {
   const [image, setImage] = useState<any>(null);
 
   const pickImage = async () => {
@@ -14,7 +20,7 @@ export default function ImagePickerExample() {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -41,4 +47,6 @@ export default function ImagePickerExample() {
       )}
     </View>
   );
-}
+};
+
+export default ImagePickerExample;

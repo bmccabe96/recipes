@@ -29,7 +29,7 @@ const RecipeStack = () => {
   );
 };
 
-const UserStack = () => {
+const UserStack: React.FC<any> = () => {
   return (
     <RecipesProvider>
       <NavigationContainer>

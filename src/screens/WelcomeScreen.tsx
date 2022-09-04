@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CardStyleInterpolators } from 'react-navigation-stack';
-import ImagePickerExample from '../components/ImagePicker';
 
 const WelcomeScreen: React.FC<NativeStackScreenProps<any>> = ({
   navigation,
@@ -21,7 +20,6 @@ const WelcomeScreen: React.FC<NativeStackScreenProps<any>> = ({
           onPress={() => navigation.navigate('Sign Up')}
         />
       </View>
-      <ImagePickerExample />
     </View>
   );
 };

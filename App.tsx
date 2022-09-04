@@ -27,25 +27,5 @@ export default function App() {
     logging.info('Loading application');
   }, [logging]);
 
-  return (
-    <RootNavigation />
-    // <RecipesProvider>
-    //   <RootNavigation />
-    // </RecipesProvider>
-  );
-
-  // return (
-  //   <RecipesProvider>
-  //     <NavigationContainer>
-  //       <Stack.Navigator initialRouteName="Recipes">
-  //         <Stack.Screen name="Recipes" component={RecipesScreen} />
-  //         <Stack.Screen
-  //           name="RecipeDetail"
-  //           component={RecipeDetailScreen}
-  //           options={{ title: 'Recipe Details' }}
-  //         />
-  //       </Stack.Navigator>
-  //     </NavigationContainer>
-  //   </RecipesProvider>
-  // );
+  return <RootNavigation />;
 }
