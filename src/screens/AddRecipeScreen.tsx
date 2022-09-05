@@ -9,8 +9,10 @@ import {
   Pressable,
   TouchableOpacity,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import React, { useState } from 'react';
 import ImagePickerExample from '../components/ImagePicker';
+import RecipeListItemAdder from '../components/RecipeListItemAdder';
 
 interface RecipeInput {
   name: string;
@@ -44,10 +46,17 @@ const AddRecipeScreen: React.FC<any> = () => {
     });
   };
 
+  const setListItemData = (data: string[], key: string) => {
+    setInput({
+      ...input,
+      [key]: data,
+    });
+  };
+
   return (
     <>
       <View style={styles.container}>
-        <ScrollView
+        <KeyboardAwareScrollView
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
           fadingEdgeLength={1}
@@ -59,7 +68,7 @@ const AddRecipeScreen: React.FC<any> = () => {
               alignSelf: 'center',
             }}
           >
-            Enter details...
+            Main details...
           </Text>
           <TextInput
             placeholder="name"
@@ -101,18 +110,48 @@ const AddRecipeScreen: React.FC<any> = () => {
               setInput({ ...input, cookTime: text })
             }
           />
-          <View style={styles.row}>
-            <Button title="Ingredients" />
-            <Text style={styles.subText}>(5)</Text>
-          </View>
-          <View style={styles.row}>
-            <Button title="Directions" />
-            <Text style={styles.subText}>(8)</Text>
-          </View>
-          <View style={styles.row}>
-            <Button title="Nutrition" />
-            <Text style={styles.subText}>(4)</Text>
-          </View>
+          <Text
+            style={{
+              fontSize: 24,
+              marginTop: 25,
+              alignSelf: 'center',
+            }}
+          >
+            Ingredients...
+          </Text>
+          <RecipeListItemAdder
+            data={input.ingredients}
+            setListItemData={setListItemData}
+            listType="ingredients"
+          />
+          <Text
+            style={{
+              fontSize: 24,
+              marginTop: 25,
+              alignSelf: 'center',
+            }}
+          >
+            Directions...
+          </Text>
+          <RecipeListItemAdder
+            data={input.directions}
+            setListItemData={setListItemData}
+            listType="directions"
+          />
+          <Text
+            style={{
+              fontSize: 24,
+              marginTop: 25,
+              alignSelf: 'center',
+            }}
+          >
+            Nutrition...
+          </Text>
+          <RecipeListItemAdder
+            data={input.nutrition}
+            setListItemData={setListItemData}
+            listType="nutrition"
+          />
           {input.image && (
             <Image
               source={{ uri: input.image }}
@@ -129,7 +168,7 @@ const AddRecipeScreen: React.FC<any> = () => {
           <TouchableOpacity style={styles.button}>
             <Text style={styles.text}>Confirm</Text>
           </TouchableOpacity>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </View>
     </>
   );
@@ -157,8 +196,8 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    height: 60,
-    margin: 12,
+    height: 40,
+    margin: 5,
     borderWidth: 1,
     padding: 10,
     width: 250,
