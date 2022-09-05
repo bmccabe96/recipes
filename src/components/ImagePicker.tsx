@@ -8,9 +8,7 @@ import {
   getDownloadURL,
 } from 'firebase/storage';
 
-const ImagePickerExample: React.FC<any> = () => {
-  const [image, setImage] = useState<any>(null);
-
+const ImagePickerExample: React.FC<any> = ({ setImage }) => {
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -30,7 +28,6 @@ const ImagePickerExample: React.FC<any> = () => {
   return (
     <View
       style={{
-        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
       }}
@@ -39,12 +36,6 @@ const ImagePickerExample: React.FC<any> = () => {
         title="Pick an image from camera roll"
         onPress={pickImage}
       />
-      {image && (
-        <Image
-          source={{ uri: image }}
-          style={{ width: 200, height: 200 }}
-        />
-      )}
     </View>
   );
 };

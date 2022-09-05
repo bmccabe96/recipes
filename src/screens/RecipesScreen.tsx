@@ -8,7 +8,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import ImagePickerExample from '../components/ImagePicker';
 
 import { useRecipes } from '../context/Recipes';
 import { useAuth } from '../context/Auth';
@@ -49,7 +48,6 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
             </TouchableOpacity>
           )}
         />
-        <ImagePickerExample />
         <StatusBar style="auto" />
       </View>
     </>
