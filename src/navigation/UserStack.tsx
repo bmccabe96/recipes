@@ -9,21 +9,42 @@ import {
   RecipesScreen,
   RecipeDetailScreen,
   AccountScreen,
+  AddRecipeScreen,
 } from '../screens';
 
 import { RootStackParamList } from '../../src/types';
+import { Button } from 'react-native';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
-const RecipeStack = () => {
+const RecipeStack = ({ navigation }: any) => {
   return (
     <Stack.Navigator initialRouteName="Recipes">
-      <Stack.Screen name="Recipes" component={RecipesScreen} />
+      <Stack.Screen
+        name="Recipes"
+        component={RecipesScreen}
+        options={{
+          headerRight: () => (
+            <Button
+              title="Add"
+              color="blue"
+              onPress={() => {
+                navigation.navigate('AddRecipe');
+              }}
+            />
+          ),
+        }}
+      />
       <Stack.Screen
         name="RecipeDetail"
         component={RecipeDetailScreen}
         options={{ title: 'Recipe Details' }}
+      />
+      <Stack.Screen
+        name="AddRecipe"
+        component={AddRecipeScreen}
+        options={{ title: 'Add a recipe' }}
       />
     </Stack.Navigator>
   );
