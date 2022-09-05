@@ -11,6 +11,7 @@ import { StatusBar } from 'expo-status-bar';
 import ImagePickerExample from '../components/ImagePicker';
 
 import { useRecipes } from '../context/Recipes';
+import { useAuth } from '../context/Auth';
 
 import { RecipesProps } from '../types';
 
@@ -19,10 +20,15 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
     state: { recipes },
     recipesLoad,
   } = useRecipes();
+  const {
+    state: { user },
+  } = useAuth();
 
   useEffect(() => {
     recipesLoad();
   }, []);
+
+  console.log(user);
 
   return (
     <>

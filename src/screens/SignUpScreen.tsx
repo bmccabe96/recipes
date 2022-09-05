@@ -45,7 +45,7 @@ const SignUpScreen: React.FC<NativeStackScreenProps<any>> = ({
         value.email,
         value.password
       );
-      navigation.navigate('Sign in');
+      //navigation.navigate('Sign in');
     } catch (e: any) {
       setValue({
         ...value,

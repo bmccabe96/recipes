@@ -2,10 +2,18 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CardStyleInterpolators } from 'react-navigation-stack';
+import { useAuth } from '../context/Auth';
 
 const WelcomeScreen: React.FC<NativeStackScreenProps<any>> = ({
   navigation,
 }) => {
+  //THIS IS JUST FOR TESTING REMOVAL OF USER ID FROM STATE AT LOGOUT
+  //------------------------------------
+  const {
+    state: { user },
+  } = useAuth();
+  console.log(user);
+  // -----------------------------------
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Recipes - Make some food!</Text>

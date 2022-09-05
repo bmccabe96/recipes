@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useLogging } from './src/hooks/useLogging';
 import { RecipesProvider } from './src/context/Recipes';
+import { AuthProvider } from './src/context/Auth';
 import RootNavigation from './src/navigation';
 
 import {
@@ -27,5 +28,9 @@ export default function App() {
     logging.info('Loading application');
   }, [logging]);
 
-  return <RootNavigation />;
+  return (
+    <AuthProvider>
+      <RootNavigation />
+    </AuthProvider>
+  );
 }
