@@ -47,7 +47,20 @@ const AddRecipeScreen: React.FC<any> = () => {
   return (
     <>
       <View style={styles.container}>
-        <ScrollView style={styles.scrollView}>
+        <ScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+          fadingEdgeLength={1}
+        >
+          <Text
+            style={{
+              fontSize: 24,
+              marginTop: 25,
+              alignSelf: 'center',
+            }}
+          >
+            Enter details...
+          </Text>
           <TextInput
             placeholder="name"
             style={styles.input}
@@ -100,17 +113,23 @@ const AddRecipeScreen: React.FC<any> = () => {
             <Button title="Nutrition" />
             <Text style={styles.subText}>(4)</Text>
           </View>
+          {input.image && (
+            <Image
+              source={{ uri: input.image }}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 15,
+                marginTop: 15,
+                alignSelf: 'center',
+              }}
+            />
+          )}
+          <ImagePickerExample setImage={setImage} />
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.text}>Confirm</Text>
+          </TouchableOpacity>
         </ScrollView>
-        {input.image && (
-          <Image
-            source={{ uri: input.image }}
-            style={{ width: 100, height: 100, borderRadius: 15 }}
-          />
-        )}
-        <ImagePickerExample setImage={setImage} />
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.text}>Confirm</Text>
-        </TouchableOpacity>
       </View>
     </>
   );
@@ -138,13 +157,14 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    height: 40,
+    height: 60,
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    width: 200,
+    width: 250,
     borderRadius: 4,
     borderColor: 'blue',
+    fontSize: 16,
   },
   button: {
     alignItems: 'center',
