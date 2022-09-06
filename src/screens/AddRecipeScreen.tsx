@@ -12,11 +12,13 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import React, { useState } from 'react';
 import ImagePickerExample from '../components/ImagePicker';
+import ImageManipulator from 'expo-image-manipulator';
 import RecipeListItemAdder from '../components/RecipeListItemAdder';
 import { storage } from '../config/firebase';
 import {
   ref,
   uploadBytes,
+  uploadString,
   getDownloadURL,
   uploadBytesResumable,
 } from 'firebase/storage';
@@ -66,16 +68,16 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
   };
 
   const uploadImageAsync = async (uri: string) => {
+    setIsLoading(true);
     const imgName = 'img-' + input.name;
     const storageRef = ref(storage, `images/${user}/${imgName}.jpg`);
 
     //convert image to array of bytes
     const img = await fetch(uri);
     const bytes = await img.blob();
+    //console.log(bytes.size);
+    //await uploadBytes(storageRef, bytes);
 
-    //console.log(uri, typeof bytes);
-    setIsLoading(true);
-    await uploadBytes(storageRef, bytes);
     navigation.navigate('Recipes');
   };
 
@@ -84,7 +86,17 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
   };
 
   if (isLoading) {
-    return <Text>SUBMITTING...</Text>;
+    return (
+      <Text
+        style={{
+          marginTop: 25,
+          fontSize: 25,
+          alignSelf: 'center',
+        }}
+      >
+        SUBMITTING...
+      </Text>
+    );
   }
 
   return (
