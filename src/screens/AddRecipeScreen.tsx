@@ -13,6 +13,14 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import React, { useState } from 'react';
 import ImagePickerExample from '../components/ImagePicker';
 import RecipeListItemAdder from '../components/RecipeListItemAdder';
+import { storage } from '../config/firebase';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadBytesResumable,
+} from 'firebase/storage';
+import { useAuth } from '../context/Auth';
 
 interface RecipeInput {
   name: string;
@@ -38,6 +46,10 @@ const AddRecipeScreen: React.FC<any> = () => {
     nutrition: [],
     image: '',
   });
+  const {
+    state: { user },
+  } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const setImage = (image: string) => {
     setInput({
@@ -51,6 +63,65 @@ const AddRecipeScreen: React.FC<any> = () => {
       ...input,
       [key]: data,
     });
+  };
+
+  const uploadImageAsync = async (uri: string) => {
+    const imgName = 'img-' + new Date().getTime();
+    const storageRef = ref(storage, `images/${user}/${imgName}.jpg`);
+
+    //convert image to array of bytes
+    const img = await fetch(uri);
+    const bytes = await img.blob();
+
+    // const uploadTask = uploadBytesResumable(storageRef, bytes);
+    // uploadTask.on(
+    //   'state_changed',
+    //   (snapshot) => {
+    //     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+    //     const progress =
+    //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //     console.log('Upload is ' + progress + '% done');
+    //     switch (snapshot.state) {
+    //       case 'paused':
+    //         console.log('Upload is paused');
+    //         break;
+    //       case 'running':
+    //         console.log('Upload is running');
+    //         break;
+    //     }
+    //   },
+    //   (error) => {
+    //     setIsLoading(false);
+    //     // https://firebase.google.com/docs/storage/web/handle-errors
+    //     switch (error.code) {
+    //       case 'storage/unauthorized':
+    //         console.log(
+    //           "User doesn't have permission to access the object"
+    //         );
+    //         break;
+    //       case 'storage/canceled':
+    //         console.log('User canceled the upload');
+    //         break;
+    //       case 'storage/unknown':
+    //         console.log(
+    //           'Unknown error occurred, inspect error.serverResponse'
+    //         );
+    //         break;
+    //     }
+    //   },
+    //   () => {
+    //     // Upload completed successfully, now we can get the download URL
+    //     getDownloadURL(uploadTask.snapshot.ref).then(
+    //       (downloadURL) => {
+    //         console.log('File available at', downloadURL);
+    //       }
+    //     );
+    //   }
+    // );
+  };
+
+  const printState = () => {
+    console.log(input);
   };
 
   return (
@@ -165,7 +236,16 @@ const AddRecipeScreen: React.FC<any> = () => {
             />
           )}
           <ImagePickerExample setImage={setImage} />
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={printState}
+          >
+            <Text style={styles.text}>TEST STATE</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => uploadImageAsync(input.image)}
+          >
             <Text style={styles.text}>Confirm</Text>
           </TouchableOpacity>
         </KeyboardAwareScrollView>

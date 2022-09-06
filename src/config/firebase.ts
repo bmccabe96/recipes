@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import 'firebase/auth';
+import { getStorage } from 'firebase/storage';
 import Constants from 'expo-constants';
 
 const firebaseConfig: any = {
@@ -15,6 +16,7 @@ const firebaseConfig: any = {
 };
 
 const app = initializeApp(firebaseConfig.firebaseConfig);
+export const storage = getStorage(app);
 
 export default app;
 
