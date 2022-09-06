@@ -34,7 +34,7 @@ interface RecipeInput {
   image: string;
 }
 
-const AddRecipeScreen: React.FC<any> = () => {
+const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
   const [input, setInput] = useState<RecipeInput>({
     name: '',
     category: '',
@@ -66,63 +66,26 @@ const AddRecipeScreen: React.FC<any> = () => {
   };
 
   const uploadImageAsync = async (uri: string) => {
-    const imgName = 'img-' + new Date().getTime();
+    const imgName = 'img-' + input.name;
     const storageRef = ref(storage, `images/${user}/${imgName}.jpg`);
 
     //convert image to array of bytes
     const img = await fetch(uri);
     const bytes = await img.blob();
 
-    // const uploadTask = uploadBytesResumable(storageRef, bytes);
-    // uploadTask.on(
-    //   'state_changed',
-    //   (snapshot) => {
-    //     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-    //     const progress =
-    //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    //     console.log('Upload is ' + progress + '% done');
-    //     switch (snapshot.state) {
-    //       case 'paused':
-    //         console.log('Upload is paused');
-    //         break;
-    //       case 'running':
-    //         console.log('Upload is running');
-    //         break;
-    //     }
-    //   },
-    //   (error) => {
-    //     setIsLoading(false);
-    //     // https://firebase.google.com/docs/storage/web/handle-errors
-    //     switch (error.code) {
-    //       case 'storage/unauthorized':
-    //         console.log(
-    //           "User doesn't have permission to access the object"
-    //         );
-    //         break;
-    //       case 'storage/canceled':
-    //         console.log('User canceled the upload');
-    //         break;
-    //       case 'storage/unknown':
-    //         console.log(
-    //           'Unknown error occurred, inspect error.serverResponse'
-    //         );
-    //         break;
-    //     }
-    //   },
-    //   () => {
-    //     // Upload completed successfully, now we can get the download URL
-    //     getDownloadURL(uploadTask.snapshot.ref).then(
-    //       (downloadURL) => {
-    //         console.log('File available at', downloadURL);
-    //       }
-    //     );
-    //   }
-    // );
+    //console.log(uri, typeof bytes);
+    setIsLoading(true);
+    await uploadBytes(storageRef, bytes);
+    navigation.navigate('Recipes');
   };
 
   const printState = () => {
     console.log(input);
   };
+
+  if (isLoading) {
+    return <Text>SUBMITTING...</Text>;
+  }
 
   return (
     <>
