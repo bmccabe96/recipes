@@ -12,7 +12,6 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import React, { useState } from 'react';
 import ImagePickerExample from '../components/ImagePicker';
-import ImageManipulator from 'expo-image-manipulator';
 import RecipeListItemAdder from '../components/RecipeListItemAdder';
 import { storage } from '../config/firebase';
 import {
@@ -22,6 +21,7 @@ import {
   getDownloadURL,
   uploadBytesResumable,
 } from 'firebase/storage';
+import Compressor from 'compressorjs';
 import { useAuth } from '../context/Auth';
 
 interface RecipeInput {
@@ -75,10 +75,36 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
     //convert image to array of bytes
     const img = await fetch(uri);
     const bytes = await img.blob();
-    //console.log(bytes.size);
-    //await uploadBytes(storageRef, bytes);
 
-    navigation.navigate('Recipes');
+    //Use uploadBytesResumable --> Firebase issue where uploadBytes crashes above 2MB
+    const uploadTask = uploadBytesResumable(storageRef, bytes);
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        console.log('Upload is done');
+        navigation.navigate('Recipes');
+      }
+    );
   };
 
   const printState = () => {

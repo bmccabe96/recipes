@@ -15,7 +15,7 @@ const ImagePickerExample: React.FC<any> = ({ setImage }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 0.05,
+      quality: 0,
     });
 
     // console.log(result);
