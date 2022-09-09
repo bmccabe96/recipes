@@ -1,10 +1,20 @@
 import { useContext } from 'react';
 import createDataContext from './createDataContext';
+import { collection, getDocs } from 'firebase/firestore';
+import { firestore } from '../config/firebase';
 
 const RECIPES_LOAD = 'RECIPES_LOAD';
 
 const recipesLoad = (dispatch: any) => async () => {
-  const data = require('../recipes.json');
+  //const data = require('../recipes.json');
+  let data: any = [];
+  const querySnapshot = await getDocs(
+    collection(firestore, 'recipes')
+  );
+  querySnapshot.forEach((doc) => {
+    data.push(doc.data());
+  });
+  console.log(data);
 
   dispatch({ type: RECIPES_LOAD, recipes: data });
 };

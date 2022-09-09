@@ -4,24 +4,21 @@ import {
   View,
   Image,
   TextInput,
-  ScrollView,
-  Button,
-  Pressable,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import React, { useState } from 'react';
 import ImagePickerExample from '../components/ImagePicker';
 import RecipeListItemAdder from '../components/RecipeListItemAdder';
 import { storage } from '../config/firebase';
+import { firestore } from '../config/firebase';
 import {
   ref,
-  uploadBytes,
-  uploadString,
   getDownloadURL,
   uploadBytesResumable,
 } from 'firebase/storage';
-import Compressor from 'compressorjs';
+import { collection, addDoc } from 'firebase/firestore';
 import { useAuth } from '../context/Auth';
 
 interface RecipeInput {
@@ -34,6 +31,7 @@ interface RecipeInput {
   directions: string[];
   nutrition: string[];
   image: string;
+  downloadUrl: string;
 }
 
 const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
@@ -47,6 +45,7 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
     directions: [],
     nutrition: [],
     image: '',
+    downloadUrl: '',
   });
   const {
     state: { user },
@@ -98,13 +97,30 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
       (error) => {
         // Handle unsuccessful uploads
       },
-      () => {
+      async () => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         console.log('Upload is done');
-        navigation.navigate('Recipes');
+        await getDownloadURL(uploadTask.snapshot.ref).then(
+          (downloadURL) => {
+            console.log('File available at', downloadURL);
+            setInput({
+              ...input,
+              downloadUrl: downloadURL,
+            });
+          }
+        );
       }
     );
+    try {
+      const docRef = await addDoc(collection(firestore, 'recipes'), {
+        input,
+      });
+      console.log('Document written with ID: ', docRef.id);
+    } catch (e) {
+      console.error('Error adding document: ', e);
+    }
+    //navigation.navigate('Recipes');
   };
 
   const printState = () => {
@@ -113,15 +129,21 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
 
   if (isLoading) {
     return (
-      <Text
-        style={{
-          marginTop: 25,
-          fontSize: 25,
-          alignSelf: 'center',
-        }}
-      >
-        SUBMITTING...
-      </Text>
+      <View>
+        <Text
+          style={{
+            marginTop: 25,
+            fontSize: 25,
+            alignSelf: 'center',
+          }}
+        >
+          SUBMITTING...
+        </Text>
+        <Button
+          title="set loading false"
+          onPress={() => setIsLoading(false)}
+        />
+      </View>
     );
   }
 

@@ -7,7 +7,7 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 
 export type RootStackParamList = {
   Recipes: undefined;
-  RecipeDetail: { name: string };
+  RecipeDetail: { name: string; user: string };
   AddRecipe: undefined;
 };
 
