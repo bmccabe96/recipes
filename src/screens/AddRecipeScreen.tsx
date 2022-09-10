@@ -20,6 +20,7 @@ import {
 } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
 import { useAuth } from '../context/Auth';
+import { useRecipes } from '../context/Recipes';
 
 interface RecipeInput {
   name: string;
@@ -50,6 +51,7 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
   const {
     state: { user },
   } = useAuth();
+  const { recipesAdd } = useRecipes();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const setImage = (image: string) => {
@@ -112,15 +114,8 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
         );
       }
     );
-    try {
-      const docRef = await addDoc(collection(firestore, 'recipes'), {
-        input,
-      });
-      console.log('Document written with ID: ', docRef.id);
-    } catch (e) {
-      console.error('Error adding document: ', e);
-    }
-    //navigation.navigate('Recipes');
+    recipesAdd(input);
+    navigation.navigate('Recipes');
   };
 
   const printState = () => {

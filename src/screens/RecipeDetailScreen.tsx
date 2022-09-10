@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image } from 'react-native';
 import { RecipeDetailProps } from '../types';
 import { firestore } from '../config/firebase';
 
@@ -18,6 +18,7 @@ const RecipeDetailScreen = ({
   const {
     state: { user },
   } = useAuth();
+  const [url, setUrl] = useState<string>('');
 
   const recipe = recipes.find(
     ({ name }: any) =>
@@ -30,6 +31,12 @@ const RecipeDetailScreen = ({
         <Text>{recipe.name}</Text>
         <Text>{recipe.category}</Text>
         <Text>{recipe.downloadUrl}</Text>
+        {url && (
+          <Image
+            source={{ uri: url }}
+            style={{ width: 200, height: 200 }}
+          />
+        )}
       </View>
     </>
   );

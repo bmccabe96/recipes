@@ -27,26 +27,9 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
     state: { user },
   } = useAuth();
 
-  const [url, setUrl] = useState<string>('');
-
   useEffect(() => {
     recipesLoad();
-  }, []);
-
-  console.log(user);
-
-  const getFileTest = async () => {
-    //'gs://recipes-react-97ff8.appspot.com/images/ZkDwcjpOf3dZwd1oEtuQNYVsyQv2/img-Eve.jpg';
-    const storageRef = ref(storage, `images/${user}/img-Eve.jpg`);
-    await getDownloadURL(storageRef)
-      .then((url) => {
-        setUrl(url);
-      })
-      .catch((error) => {
-        console.log(error.code);
-      });
-    console.log(url);
-  };
+  }, [recipes]);
 
   return (
     <>
@@ -54,7 +37,7 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
         <Text>Recipes Screen</Text>
         <FlatList
           data={recipes}
-          keyExtractor={(item) => item.name}
+          keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() =>
@@ -68,13 +51,6 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
             </TouchableOpacity>
           )}
         />
-        {url && (
-          <Image
-            source={{ uri: url }}
-            style={{ width: 200, height: 200 }}
-          />
-        )}
-        <Button title="Test fetch image" onPress={getFileTest} />
         <StatusBar style="auto" />
       </View>
     </>
