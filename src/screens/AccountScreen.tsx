@@ -8,14 +8,16 @@ const auth = getAuth();
 
 const AccountScreen = () => {
   const {
-    state: { user },
+    state: { user, firebaseUser },
     authRemoveUser,
   } = useAuth();
 
   return (
     <>
       <View style={styles.container}>
-        <Text>Account Screen</Text>
+        {firebaseUser && (
+          <Text style={styles.email}>{firebaseUser.email}</Text>
+        )}
         <Button
           title="Sign out"
           onPress={() => {
@@ -34,6 +36,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  email: {
+    fontSize: 20,
   },
 });
 

@@ -23,7 +23,7 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
 
   useEffect(() => {
     recipesLoad();
-  }, [recipes]);
+  }, []);
 
   return (
     <>
