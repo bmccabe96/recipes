@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image } from 'react-native';
 import { RecipeDetailProps } from '../types';
 import { firestore } from '../config/firebase';
@@ -24,6 +24,10 @@ const RecipeDetailScreen = ({
     ({ name }: any) =>
       name === route.params.name && user === route.params.user
   );
+
+  useEffect(() => {
+    setUrl(recipe.downloadUrl);
+  }, []);
 
   return (
     <>

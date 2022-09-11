@@ -3,20 +3,14 @@ import {
   View,
   FlatList,
   Text,
-  Button,
   TouchableOpacity,
   StyleSheet,
   Image,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-
 import { useRecipes } from '../context/Recipes';
 import { useAuth } from '../context/Auth';
-
 import { RecipesProps } from '../types';
-
-import { storage } from '../config/firebase';
-import { ref, getDownloadURL } from 'firebase/storage';
 
 const RecipesScreen = ({ route, navigation }: RecipesProps) => {
   const {
@@ -34,8 +28,8 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
   return (
     <>
       <View style={styles.container}>
-        <Text>Recipes Screen</Text>
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={recipes}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
@@ -46,8 +40,17 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
                   user: user,
                 })
               }
+              style={styles.listItem}
+              activeOpacity={1}
             >
-              <Text>{item.name}</Text>
+              <Text style={styles.title}>{item.name}</Text>
+              {item.downloadUrl && (
+                <Image
+                  source={{ uri: item.downloadUrl }}
+                  style={styles.image}
+                />
+              )}
+              {item.category && <Text>- {item.category} -</Text>}
             </TouchableOpacity>
           )}
         />
@@ -63,6 +66,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  listItem: {
+    alignItems: 'center',
+    borderBottomColor: 'rgb(0,0,200)',
+    borderBottomWidth: 1,
+    paddingVertical: 10,
+  },
+  title: {
+    fontSize: 28,
+  },
+  image: {
+    width: 300,
+    height: 200,
+    borderRadius: 100,
+    marginVertical: 10,
   },
 });
 

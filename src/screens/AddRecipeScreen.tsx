@@ -8,7 +8,7 @@ import {
   Button,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ImagePickerExample from '../components/ImagePicker';
 import RecipeListItemAdder from '../components/RecipeListItemAdder';
 import { storage } from '../config/firebase';
@@ -68,6 +68,13 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
     });
   };
 
+  useEffect(() => {
+    if (input.downloadUrl) {
+      recipesAdd(input);
+      navigation.navigate('Recipes');
+    }
+  }, [input.downloadUrl]);
+
   const uploadImageAsync = async (uri: string) => {
     setIsLoading(true);
     const imgName = 'img-' + input.name;
@@ -99,11 +106,11 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
       (error) => {
         // Handle unsuccessful uploads
       },
-      async () => {
+      () => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         console.log('Upload is done');
-        await getDownloadURL(uploadTask.snapshot.ref).then(
+        getDownloadURL(uploadTask.snapshot.ref).then(
           (downloadURL) => {
             console.log('File available at', downloadURL);
             setInput({
@@ -114,8 +121,6 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
         );
       }
     );
-    recipesAdd(input);
-    navigation.navigate('Recipes');
   };
 
   const printState = () => {
@@ -134,10 +139,6 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
         >
           SUBMITTING...
         </Text>
-        <Button
-          title="set loading false"
-          onPress={() => setIsLoading(false)}
-        />
       </View>
     );
   }
