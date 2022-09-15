@@ -150,15 +150,7 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           fadingEdgeLength={1}
         >
-          <Text
-            style={{
-              fontSize: 24,
-              marginTop: 25,
-              alignSelf: 'center',
-            }}
-          >
-            Main details...
-          </Text>
+          <Text style={styles.heading}>Main details</Text>
           <TextInput
             placeholder="name"
             style={styles.input}
@@ -176,7 +168,7 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
             }
           />
           <TextInput
-            placeholder="serving size"
+            placeholder="servings"
             style={styles.input}
             value={input.servingSize}
             onChangeText={(text) =>
@@ -199,48 +191,26 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
               setInput({ ...input, cookTime: text })
             }
           />
-          <Text
-            style={{
-              fontSize: 24,
-              marginTop: 25,
-              alignSelf: 'center',
-            }}
-          >
-            Ingredients...
-          </Text>
+          <Text style={styles.heading}>Ingredients</Text>
           <RecipeListItemAdder
             data={input.ingredients}
             setListItemData={setListItemData}
             listType="ingredients"
           />
-          <Text
-            style={{
-              fontSize: 24,
-              marginTop: 25,
-              alignSelf: 'center',
-            }}
-          >
-            Directions...
-          </Text>
+          <Text style={styles.heading}>Directions</Text>
           <RecipeListItemAdder
             data={input.directions}
             setListItemData={setListItemData}
             listType="directions"
           />
-          <Text
-            style={{
-              fontSize: 24,
-              marginTop: 25,
-              alignSelf: 'center',
-            }}
-          >
-            Nutrition...
-          </Text>
+          <Text style={styles.heading}>Nutrition</Text>
           <RecipeListItemAdder
             data={input.nutrition}
             setListItemData={setListItemData}
             listType="nutrition"
           />
+          <Text style={styles.heading}>Add a photo</Text>
+
           {input.image && (
             <Image
               source={{ uri: input.image }}
@@ -283,7 +253,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
+  heading: {
+    fontSize: 24,
+    marginTop: 25,
+    alignSelf: 'center',
+  },
   control: {
     marginTop: 10,
   },

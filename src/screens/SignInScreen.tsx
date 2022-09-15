@@ -9,6 +9,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { StatusBar } from 'expo-status-bar';
 
 const auth = getAuth();
 
@@ -88,6 +89,7 @@ const SignInScreen: React.FC<NativeStackScreenProps<any>> = ({
 
         <Button title="Sign in" onPress={signIn} />
       </View>
+      <StatusBar style="auto" />
     </View>
   );
 };
