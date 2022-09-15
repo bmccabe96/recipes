@@ -33,9 +33,13 @@ interface RecipeInput {
   nutrition: string[];
   image: string;
   downloadUrl: string;
+  user: string;
 }
 
 const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
+  const {
+    state: { user },
+  } = useAuth();
   const [input, setInput] = useState<RecipeInput>({
     name: '',
     category: '',
@@ -47,10 +51,9 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
     nutrition: [],
     image: '',
     downloadUrl: '',
+    user: user,
   });
-  const {
-    state: { user },
-  } = useAuth();
+
   const { recipesAdd } = useRecipes();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -121,10 +124,6 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
         );
       }
     );
-  };
-
-  const printState = () => {
-    console.log(input);
   };
 
   if (isLoading) {
@@ -255,12 +254,7 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
             />
           )}
           <ImagePickerExample setImage={setImage} />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={printState}
-          >
-            <Text style={styles.text}>TEST STATE</Text>
-          </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.button}
             onPress={() => uploadImageAsync(input.image)}

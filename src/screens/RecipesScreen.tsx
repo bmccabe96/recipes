@@ -22,7 +22,7 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
   } = useAuth();
 
   useEffect(() => {
-    recipesLoad();
+    recipesLoad(user);
   }, []);
 
   return (
@@ -63,7 +63,7 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f9fa',
     alignItems: 'center',
     justifyContent: 'center',
   },

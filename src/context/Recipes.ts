@@ -7,7 +7,7 @@ import { connectStorageEmulator } from 'firebase/storage';
 const RECIPES_LOAD = 'RECIPES_LOAD';
 const RECIPES_ADD = 'RECIPES_ADD';
 
-const recipesLoad = (dispatch: any) => async () => {
+const recipesLoad = (dispatch: any) => async (user: string) => {
   //const data = require('../recipes.json');
   let data: any = [];
   const querySnapshot = await getDocs(
@@ -16,6 +16,8 @@ const recipesLoad = (dispatch: any) => async () => {
   querySnapshot.forEach((doc) => {
     data.push(doc.data());
   });
+
+  data = data.filter((item: any) => item.user === user);
 
   dispatch({ type: RECIPES_LOAD, recipes: data });
 };
@@ -37,7 +39,7 @@ const recipesReducer = (state: any, action: any) => {
     case RECIPES_LOAD:
       return { recipes: action.recipes };
     case RECIPES_ADD:
-      return { recipes: [state.recipes, action.recipe] };
+      return { recipes: [...state.recipes, action.recipe] };
     default:
       return state;
   }
