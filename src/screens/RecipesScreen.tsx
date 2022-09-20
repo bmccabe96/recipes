@@ -5,9 +5,9 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Image,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import ImageItem from '../components/ImageItem';
 import { useRecipes } from '../context/Recipes';
 import { useAuth } from '../context/Auth';
 import { RecipesProps } from '../types';
@@ -45,10 +45,12 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
             >
               <Text style={styles.title}>{item.name}</Text>
               {item.downloadUrl && (
-                <Image
-                  source={{ uri: item.downloadUrl }}
-                  style={styles.image}
-                />
+                <View style={styles.image}>
+                  <ImageItem
+                    image={item.downloadUrl}
+                    style={styles.image}
+                  />
+                </View>
               )}
               {item.category && <Text>- {item.category} -</Text>}
             </TouchableOpacity>
@@ -80,7 +82,8 @@ const styles = StyleSheet.create({
     width: 300,
     height: 200,
     borderRadius: 100,
-    marginVertical: 10,
+    marginTop: 5,
+    marginBottom: 15,
   },
 });
 

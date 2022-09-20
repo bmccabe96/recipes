@@ -2,25 +2,21 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   Dimensions,
   ScrollView,
 } from 'react-native';
 import { RecipeDetailProps } from '../types';
-import { firestore } from '../config/firebase';
-import { collection, getDocs } from 'firebase/firestore';
 import { useRecipes } from '../context/Recipes';
 import { useAuth } from '../context/Auth';
 import MainDetail from '../components/MainDetail';
 import ListDetails from '../components/ListDetails';
+import ImageItem from '../components/ImageItem';
 
 const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
-const RecipeDetailScreen = ({
-  route,
-  navigation,
-}: RecipeDetailProps) => {
+const RecipeDetailScreen = ({ route }: RecipeDetailProps) => {
   const {
     state: { recipes },
   } = useRecipes();
@@ -42,8 +38,8 @@ const RecipeDetailScreen = ({
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           {url && (
-            <Image
-              source={{ uri: url }}
+            <ImageItem
+              image={url}
               style={{ width: width, height: width }}
             />
           )}
@@ -80,6 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#f0f9fa',
+    height: height,
   },
   imageContainer: {},
   name: {

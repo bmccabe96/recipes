@@ -1,13 +1,5 @@
-import {
-  Button,
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TextInput,
-} from 'react-native';
+import { Button, StyleSheet, View, TextInput } from 'react-native';
 import React, { useState } from 'react';
-import { listAll } from 'firebase/storage';
 
 const RecipeListItemAdder: React.FC<any> = ({
   data,
@@ -20,9 +12,6 @@ const RecipeListItemAdder: React.FC<any> = ({
     <View>
       {newData.map((item: string, index: number) => {
         return (
-          // <Text>
-          //   {item} at {index}
-          // </Text>
           <TextInput
             placeholder={`${listType}`}
             style={styles.input}
