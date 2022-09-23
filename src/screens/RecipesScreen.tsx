@@ -8,8 +8,10 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import ImageItem from '../components/ImageItem';
+import RecipesFilter from '../components/RecipesFilter';
 import { useRecipes } from '../context/Recipes';
 import { useAuth } from '../context/Auth';
+import { useRecipeFilter } from '../context/RecipeFilter';
 import { RecipesProps } from '../types';
 
 const RecipesScreen = ({ route, navigation }: RecipesProps) => {
@@ -20,10 +22,17 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
   const {
     state: { user },
   } = useAuth();
+  const {
+    state: { modalVisible },
+  } = useRecipeFilter();
 
   useEffect(() => {
     recipesLoad(user);
   }, []);
+
+  //TO DO
+  // WRITE FUNCTION TO FILTER RECIPES AND PASS TO THE RECIPESFILTER COMPONENT
+  const filterRecipes = (category: string) => {};
 
   return (
     <>
@@ -57,6 +66,7 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
           )}
         />
         <StatusBar style="auto" />
+        {modalVisible && <RecipesFilter />}
       </View>
     </>
   );

@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { RecipesProvider } from '../context/Recipes';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useRecipeFilter } from '../context/RecipeFilter';
+import Feather from 'react-native-vector-icons/Feather';
 
 import {
   RecipesScreen,
@@ -13,12 +15,14 @@ import {
 } from '../screens';
 
 import { RootStackParamList } from '../../src/types';
-import { Button } from 'react-native';
+import { Button, TouchableOpacity } from 'react-native';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
 const RecipeStack = ({ navigation }: any) => {
+  const { showModal } = useRecipeFilter();
+
   return (
     <Stack.Navigator initialRouteName="Recipes">
       <Stack.Screen
@@ -33,6 +37,15 @@ const RecipeStack = ({ navigation }: any) => {
                 navigation.navigate('AddRecipe');
               }}
             />
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                showModal();
+              }}
+            >
+              <Feather name="filter" size={24} color="blue" />
+            </TouchableOpacity>
           ),
         }}
       />
