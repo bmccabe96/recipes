@@ -10,6 +10,7 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import ImageItem from '../components/ImageItem';
 import RecipesFilter from '../components/RecipesFilter';
+import EmptyScreen from '../components/EmptyScreen';
 import { useRecipes } from '../context/Recipes';
 import { useAuth } from '../context/Auth';
 import { useRecipeFilter } from '../context/RecipeFilter';
@@ -41,6 +42,14 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
       : setFilterValue(category);
     hideModal();
   };
+
+  if (recipes.length === 0) {
+    return (
+      <View style={styles.container}>
+        <EmptyScreen />
+      </View>
+    );
+  }
 
   return (
     <>

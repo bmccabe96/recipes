@@ -81,6 +81,7 @@ const SignInScreen: React.FC<NativeStackScreenProps<any>> = ({
             value={value.password}
             autoCapitalize="none"
             autoCorrect={false}
+            secureTextEntry={true}
             onChangeText={(text) =>
               setValue({ ...value, password: text })
             }
