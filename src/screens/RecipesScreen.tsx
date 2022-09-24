@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Button,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import ImageItem from '../components/ImageItem';
@@ -24,22 +25,35 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
   } = useAuth();
   const {
     state: { modalVisible },
+    hideModal,
   } = useRecipeFilter();
 
   useEffect(() => {
     recipesLoad(user);
   }, []);
 
+  const [filterValue, setFilterValue] = useState<string | null>(null);
   //TO DO
   // WRITE FUNCTION TO FILTER RECIPES AND PASS TO THE RECIPESFILTER COMPONENT
-  const filterRecipes = (category: string) => {};
+  const filterRecipes = (category: string) => {
+    category === 'all'
+      ? setFilterValue(null)
+      : setFilterValue(category);
+    hideModal();
+  };
 
   return (
     <>
       <View style={styles.container}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={recipes}
+          data={
+            !filterValue
+              ? recipes
+              : recipes.filter(
+                  (item: any) => item.category === filterValue
+                )
+          }
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -66,7 +80,14 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
           )}
         />
         <StatusBar style="auto" />
-        {modalVisible && <RecipesFilter />}
+        {modalVisible && (
+          <RecipesFilter
+            categories={[
+              ...new Set(recipes.map((item: any) => item.category)),
+            ]}
+            filterRecipes={filterRecipes}
+          />
+        )}
       </View>
     </>
   );

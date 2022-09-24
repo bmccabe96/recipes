@@ -6,6 +6,7 @@ import {
   Alert,
   TouchableOpacity,
   Dimensions,
+  Button,
 } from 'react-native';
 import React from 'react';
 import { useRecipeFilter } from '../context/RecipeFilter';
@@ -28,12 +29,28 @@ const RecipesFilter: React.FC<any> = (props) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
+            <Text style={styles.modalText}>
+              Filter by a category:
+            </Text>
+            <View>
+              <Button
+                title={'All'}
+                onPress={() => props.filterRecipes('all')}
+              />
+              {props.categories.map((item: any) => {
+                return (
+                  <Button
+                    title={item}
+                    onPress={() => props.filterRecipes(item)}
+                  />
+                );
+              })}
+            </View>
             <TouchableOpacity
               style={[styles.button, styles.buttonClose]}
               onPress={() => hideModal()}
             >
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              <Text style={styles.textStyle}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -55,9 +72,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
     shadowColor: '#000',
-    width: width,
+    width: width * 0.95,
     height: height / 2,
     shadowOffset: {
       width: 0,
@@ -72,19 +90,20 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
   },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
   buttonClose: {
     backgroundColor: '#2196F3',
+    marginTop: 10,
   },
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: 15,
   },
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
   },
 });
