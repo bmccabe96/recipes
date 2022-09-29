@@ -54,6 +54,14 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
   return (
     <>
       <View style={styles.container}>
+        <Button
+          title="print state"
+          onPress={() =>
+            recipes.forEach((item: any) =>
+              console.log(item.name, item.localImage)
+            )
+          }
+        />
         <FlatList
           showsVerticalScrollIndicator={false}
           data={

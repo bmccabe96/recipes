@@ -16,7 +16,7 @@ const WelcomeScreen: React.FC<NativeStackScreenProps<any>> = ({
   // -----------------------------------
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Recipes - Make some food!</Text>
+      <Text style={styles.title}>Recipe Hub</Text>
 
       <View style={styles.buttons}>
         <Button

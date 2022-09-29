@@ -23,14 +23,17 @@ const RecipeDetailScreen = ({ route }: RecipeDetailProps) => {
   const {
     state: { user },
   } = useAuth();
-  const [url, setUrl] = useState<string>('');
 
   const recipe = recipes.find(
     ({ name }: any) => name === route.params.name
   );
 
+  const [url, setUrl] = useState<string>('');
+  const [localUrl, setLocalUrl] = useState<string>('');
+
   useEffect(() => {
     setUrl(recipe.downloadUrl);
+    setLocalUrl(recipe.localImage);
   }, []);
 
   return (
@@ -40,6 +43,7 @@ const RecipeDetailScreen = ({ route }: RecipeDetailProps) => {
           {url && (
             <ImageItem
               image={url}
+              localImage={localUrl}
               style={{ width: width, height: width }}
             />
           )}

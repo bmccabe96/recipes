@@ -3,9 +3,17 @@ import createDataContext from './createDataContext';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { firestore } from '../config/firebase';
 import { connectStorageEmulator } from 'firebase/storage';
+import * as FileSystem from 'expo-file-system';
 
 const RECIPES_LOAD = 'RECIPES_LOAD';
 const RECIPES_ADD = 'RECIPES_ADD';
+
+const cacheImage = async (uri: string, docId: string) => {
+  await FileSystem.downloadAsync(
+    uri,
+    FileSystem.documentDirectory + docId + '.jpg'
+  ).then(({ uri }) => console.log(uri + 'asset cached successfully'));
+};
 
 const recipesLoad = (dispatch: any) => async (user: string) => {
   //const data = require('../recipes.json');
@@ -14,21 +22,37 @@ const recipesLoad = (dispatch: any) => async (user: string) => {
     collection(firestore, 'recipes')
   );
   querySnapshot.forEach((doc) => {
-    data.push(doc.data());
+    data.push({
+      ...doc.data(),
+      id: doc.id,
+      localImage: FileSystem.documentDirectory + doc.id + '.jpg',
+    });
   });
+
+  querySnapshot.forEach((doc) =>
+    cacheImage(doc.data().image, doc.id)
+  );
 
   data = data.filter((item: any) => item.user === user);
 
   dispatch({ type: RECIPES_LOAD, recipes: data });
 };
 
-const recipesAdd = (dispatch: any) => async (newRecipe: object) => {
+const recipesAdd = (dispatch: any) => async (newRecipe: any) => {
   try {
     const docRef = await addDoc(collection(firestore, 'recipes'), {
       ...newRecipe,
     });
     console.log('Document written with ID: ', docRef.id);
-    dispatch({ type: RECIPES_ADD, recipe: newRecipe });
+    cacheImage(newRecipe.downloadUrl, docRef.id);
+    dispatch({
+      type: RECIPES_ADD,
+      recipe: {
+        ...newRecipe,
+        id: docRef.id,
+        localImage: FileSystem.documentDirectory + docRef.id + '.jpg',
+      },
+    });
   } catch (e) {
     console.error('Error adding document: ', e);
   }

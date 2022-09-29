@@ -18,7 +18,9 @@ const ImageItem: React.FC<any> = (props) => {
       {
         <Image
           style={{ ...props.style }}
-          source={{ uri: props.image }}
+          source={{
+            uri: !props.localImage ? props.image : props.localImage,
+          }}
           onLoadStart={() => onLoading(true)}
           onLoad={() => onLoading(false)}
         ></Image>
