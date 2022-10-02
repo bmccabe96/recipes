@@ -1,12 +1,20 @@
 import { useContext } from 'react';
 import createDataContext from './createDataContext';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  deleteDoc,
+} from 'firebase/firestore';
 import { firestore } from '../config/firebase';
 import { connectStorageEmulator } from 'firebase/storage';
 import * as FileSystem from 'expo-file-system';
+import { ActionSheetIOS } from 'react-native';
 
 const RECIPES_LOAD = 'RECIPES_LOAD';
 const RECIPES_ADD = 'RECIPES_ADD';
+const RECIPES_DELETE = 'RECIPES_DELETE';
 
 const cacheImage = async (uri: string, docId: string) => {
   await FileSystem.downloadAsync(
@@ -58,12 +66,30 @@ const recipesAdd = (dispatch: any) => async (newRecipe: any) => {
   }
 };
 
+const recipesDelete = (dispatch: any) => async (docId: any) => {
+  const docRef = doc(firestore, 'recipes', docId);
+  deleteDoc(docRef)
+    .then(() => {
+      console.log('Entire Document has been deleted successfully.');
+      dispatch({ type: RECIPES_DELETE, id: docId });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 const recipesReducer = (state: any, action: any) => {
   switch (action.type) {
     case RECIPES_LOAD:
       return { recipes: action.recipes };
     case RECIPES_ADD:
       return { recipes: [...state.recipes, action.recipe] };
+    case RECIPES_DELETE:
+      return {
+        recipes: state.recipes.filter(
+          (item: any) => item.id !== action.id
+        ),
+      };
     default:
       return state;
   }
@@ -72,7 +98,7 @@ const recipesReducer = (state: any, action: any) => {
 const { Context: RecipesContext, Provider: RecipesProvider } =
   createDataContext(
     recipesReducer,
-    { recipesLoad, recipesAdd },
+    { recipesLoad, recipesAdd, recipesDelete },
     { recipes: [] }
   );
 
