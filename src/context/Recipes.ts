@@ -70,7 +70,7 @@ const recipesAdd = (dispatch: any) => async (newRecipe: any) => {
 
 const recipesEdit =
   (dispatch: any) => async (recipe: any, navigate: any) => {
-    const docRef = await doc(firestore, 'recipes', recipe.id);
+    const docRef = doc(firestore, 'recipes', recipe.id);
 
     const date = new Date();
     const currentTime =
@@ -110,7 +110,14 @@ const recipesReducer = (state: any, action: any) => {
     case RECIPES_ADD:
       return { recipes: [...state.recipes, action.recipe] };
     case RECIPES_EDIT:
-      return { recipes: [...state.recipes, action.recipe] };
+      return {
+        recipes: [
+          action.recipe,
+          ...state.recipes.filter(
+            (recipe: any) => recipe.id !== action.recipe.id
+          ),
+        ],
+      };
     case RECIPES_DELETE:
       return {
         recipes: state.recipes.filter(
