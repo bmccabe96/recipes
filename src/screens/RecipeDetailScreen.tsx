@@ -18,7 +18,7 @@ import DeleteModal from '../components/DeleteModal';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-const RecipeDetailScreen = ({
+const RecipeDetailScreen: React.FC<any> = ({
   route,
   navigation,
 }: RecipeDetailProps) => {
@@ -29,9 +29,11 @@ const RecipeDetailScreen = ({
     state: { user },
   } = useAuth();
 
-  const recipe = recipes.find(
-    ({ name }: any) => name === route.params.name
-  );
+  // const recipe = recipes.find(
+  //   ({ name }: any) => name === route.params.name
+  // );
+
+  const [recipe, setRecipe] = useState<any>(route.params.recipe);
 
   const [url, setUrl] = useState<string>('');
   const [localUrl, setLocalUrl] = useState<string>('');
@@ -77,7 +79,15 @@ const RecipeDetailScreen = ({
           <ListDetails title="Nutrition" data={recipe.nutrition} />
         </View>
         <TouchableOpacity
-          style={styles.button}
+          style={{ ...styles.button, backgroundColor: 'blue' }}
+          onPress={() =>
+            navigation.navigate('EditRecipe', { recipe: recipe })
+          }
+        >
+          <Text style={styles.text}>Edit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ ...styles.button, backgroundColor: 'red' }}
           onPress={() => setModalVisible(true)}
         >
           <Text style={styles.text}>Delete</Text>
@@ -98,7 +108,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#f0f9fa',
-    height: height,
   },
   imageContainer: {},
   name: {
@@ -125,20 +134,18 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
+    paddingVertical: 6,
     borderRadius: 4,
     elevation: 3,
-    borderColor: 'red',
-    borderWidth: 2,
     marginVertical: 10,
+    width: 100,
   },
   text: {
-    fontSize: 16,
+    fontSize: 12,
     lineHeight: 21,
     fontWeight: 'bold',
     letterSpacing: 0.25,
-    color: 'red',
+    color: 'white',
   },
 });
 

@@ -34,8 +34,6 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
   }, []);
 
   const [filterValue, setFilterValue] = useState<string | null>(null);
-  //TO DO
-  // WRITE FUNCTION TO FILTER RECIPES AND PASS TO THE RECIPESFILTER COMPONENT
   const filterRecipes = (category: string) => {
     category === 'all'
       ? setFilterValue(null)
@@ -56,11 +54,12 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
       <View style={styles.container}>
         <Button
           title="print state"
-          onPress={() =>
+          onPress={() => {
             recipes.forEach((item: any) =>
-              console.log(item.name, item.localImage)
-            )
-          }
+              console.log(item.name, item.id)
+            );
+            recipesLoad(user);
+          }}
         />
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -71,15 +70,18 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
                   (item: any) => item.category === filterValue
                 )
           }
-          keyExtractor={(item) => item._id}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() =>
+              onPress={() => {
                 navigation.navigate('RecipeDetail', {
                   name: item.name,
                   user: user,
-                })
-              }
+                  recipe: recipes.find(
+                    ({ id }: any) => id === item.id
+                  ),
+                });
+              }}
               style={styles.listItem}
               activeOpacity={1}
             >

@@ -12,6 +12,7 @@ import {
   RecipeDetailScreen,
   AccountScreen,
   AddRecipeScreen,
+  EditRecipeScreen,
 } from '../screens';
 
 import { RootStackParamList } from '../../src/types';
@@ -58,6 +59,11 @@ const RecipeStack = ({ navigation }: any) => {
         name="AddRecipe"
         component={AddRecipeScreen}
         options={{ title: 'Add a recipe' }}
+      />
+      <Stack.Screen
+        name="EditRecipe"
+        component={EditRecipeScreen}
+        options={{ title: 'Edit recipe' }}
       />
     </Stack.Navigator>
   );

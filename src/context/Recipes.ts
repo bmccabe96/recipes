@@ -6,6 +6,7 @@ import {
   addDoc,
   doc,
   deleteDoc,
+  updateDoc,
 } from 'firebase/firestore';
 import { firestore } from '../config/firebase';
 import { connectStorageEmulator } from 'firebase/storage';
@@ -15,6 +16,7 @@ import { ActionSheetIOS } from 'react-native';
 const RECIPES_LOAD = 'RECIPES_LOAD';
 const RECIPES_ADD = 'RECIPES_ADD';
 const RECIPES_DELETE = 'RECIPES_DELETE';
+const RECIPES_EDIT = 'RECIPES_EDIT';
 
 const cacheImage = async (uri: string, docId: string) => {
   await FileSystem.downloadAsync(
@@ -66,6 +68,29 @@ const recipesAdd = (dispatch: any) => async (newRecipe: any) => {
   }
 };
 
+const recipesEdit =
+  (dispatch: any) => async (recipe: any, navigate: any) => {
+    const docRef = await doc(firestore, 'recipes', recipe.id);
+
+    const date = new Date();
+    const currentTime =
+      date.getFullYear() +
+      '-' +
+      (date.getMonth() + 1) +
+      '-' +
+      date.getDate();
+    try {
+      await updateDoc(docRef, { ...recipe, updated: currentTime });
+      dispatch({
+        type: RECIPES_EDIT,
+        recipe: recipe,
+      });
+      navigate('Recipes');
+    } catch (e) {
+      console.error('Error updating document');
+    }
+  };
+
 const recipesDelete = (dispatch: any) => async (docId: any) => {
   const docRef = doc(firestore, 'recipes', docId);
   deleteDoc(docRef)
@@ -84,6 +109,8 @@ const recipesReducer = (state: any, action: any) => {
       return { recipes: action.recipes };
     case RECIPES_ADD:
       return { recipes: [...state.recipes, action.recipe] };
+    case RECIPES_EDIT:
+      return { recipes: [...state.recipes, action.recipe] };
     case RECIPES_DELETE:
       return {
         recipes: state.recipes.filter(
@@ -98,7 +125,7 @@ const recipesReducer = (state: any, action: any) => {
 const { Context: RecipesContext, Provider: RecipesProvider } =
   createDataContext(
     recipesReducer,
-    { recipesLoad, recipesAdd, recipesDelete },
+    { recipesLoad, recipesAdd, recipesDelete, recipesEdit },
     { recipes: [] }
   );
 

@@ -2,67 +2,40 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
+  Button,
+  ScrollView,
+  Dimensions,
   TextInput,
   TouchableOpacity,
-  Button,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import React, { useEffect, useState } from 'react';
-import ImagePickerExample from '../components/ImagePicker';
-import RecipeListItemAdder from '../components/RecipeListItemAdder';
-import { storage } from '../config/firebase';
-import { firestore } from '../config/firebase';
-import {
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-} from 'firebase/storage';
-import { collection, addDoc } from 'firebase/firestore';
-import { useAuth } from '../context/Auth';
+import React, { useState, useEffect } from 'react';
 import { useRecipes } from '../context/Recipes';
 
-export interface RecipeInput {
-  name: string;
-  category: string;
-  servingSize: string;
-  prepTime: string;
-  cookTime: string;
-  ingredients: string[];
-  directions: string[];
-  nutrition: string[];
-  image: string;
-  downloadUrl: string;
-  user: string;
-}
+import ImageItem from '../components/ImageItem';
+import RecipeListItemAdder from '../components/RecipeListItemAdder';
 
-const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
+import { RecipeInput } from '../screens/AddRecipeScreen';
+import { useAuth } from '../context/Auth';
+
+const width = Dimensions.get('window').width / 2;
+
+const EditRecipeScreen: React.FC<any> = ({ route, navigation }) => {
+  const { recipesEdit, recipesLoad } = useRecipes();
   const {
     state: { user },
   } = useAuth();
-  const [input, setInput] = useState<RecipeInput>({
-    name: '',
-    category: '',
-    servingSize: '',
-    prepTime: '',
-    cookTime: '',
-    ingredients: [],
-    directions: [],
-    nutrition: [],
-    image: '',
-    downloadUrl: '',
-    user: user,
-  });
 
-  const { recipesAdd } = useRecipes();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [url, setUrl] = useState<string>('');
+  const [localUrl, setLocalUrl] = useState<string>('');
+  const [input, setInput] = useState<RecipeInput>(
+    route.params.recipe
+  );
 
-  const setImage = (image: string) => {
-    setInput({
-      ...input,
-      image: image,
-    });
-  };
+  useEffect(() => {
+    setUrl(route.params.recipe.downloadUrl);
+    setLocalUrl(route.params.recipe.localImage);
+  }, []);
 
   const setListItemData = (data: string[], key: string) => {
     setInput({
@@ -71,80 +44,16 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
     });
   };
 
-  useEffect(() => {
-    if (input.downloadUrl) {
-      recipesAdd(input);
-      navigation.navigate('Recipes');
-    }
-  }, [input.downloadUrl]);
-
-  const uploadImageAsync = async (uri: string) => {
-    setIsLoading(true);
-    const imgName = 'img-' + input.name;
-    const storageRef = ref(storage, `images/${user}/${imgName}.jpg`);
-
-    //convert image to array of bytes
-    const img = await fetch(uri);
-    const bytes = await img.blob();
-
-    //Use uploadBytesResumable --> Firebase issue where uploadBytes crashes above 2MB
-    const uploadTask = uploadBytesResumable(storageRef, bytes);
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        switch (snapshot.state) {
-          case 'paused':
-            console.log('Upload is paused');
-            break;
-          case 'running':
-            console.log('Upload is running');
-            break;
-        }
-      },
-      (error) => {
-        // Handle unsuccessful uploads
-      },
-      () => {
-        // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        console.log('Upload is done');
-        getDownloadURL(uploadTask.snapshot.ref).then(
-          (downloadURL) => {
-            console.log('File available at', downloadURL);
-            setInput({
-              ...input,
-              downloadUrl: downloadURL,
-            });
-          }
-        );
-      }
-    );
-  };
-
-  if (isLoading) {
-    return (
-      <View>
-        <Text
-          style={{
-            marginTop: 25,
-            fontSize: 25,
-            alignSelf: 'center',
-          }}
-        >
-          SUBMITTING...
-        </Text>
-      </View>
-    );
-  }
-
   return (
-    <>
+    <ScrollView>
       <View style={styles.container}>
+        {url && (
+          <ImageItem
+            image={url}
+            localImage={localUrl}
+            style={styles.image}
+          />
+        )}
         <KeyboardAwareScrollView
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
@@ -209,33 +118,22 @@ const AddRecipeScreen: React.FC<any> = ({ navigation }) => {
             setListItemData={setListItemData}
             listType="nutrition"
           />
-          <Text style={styles.heading}>Add a photo</Text>
-
-          {input.image && (
-            <Image
-              source={{ uri: input.image }}
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: 15,
-                marginTop: 15,
-                alignSelf: 'center',
-              }}
-            />
-          )}
-          <ImagePickerExample setImage={setImage} />
-
           <TouchableOpacity
             style={styles.button}
-            onPress={() => uploadImageAsync(input.image)}
+            onPress={() => {
+              recipesEdit(input, navigation.navigate);
+              recipesLoad(user);
+            }}
           >
             <Text style={styles.text}>Confirm</Text>
           </TouchableOpacity>
         </KeyboardAwareScrollView>
       </View>
-    </>
+    </ScrollView>
   );
 };
+
+export default EditRecipeScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -293,6 +191,11 @@ const styles = StyleSheet.create({
   subText: {
     fontSize: 10,
   },
+  image: {
+    width: 300,
+    height: 200,
+    borderRadius: 100,
+    marginTop: 5,
+    marginBottom: 15,
+  },
 });
-
-export default AddRecipeScreen;
