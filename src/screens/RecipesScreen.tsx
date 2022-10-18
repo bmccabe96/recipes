@@ -52,7 +52,7 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
   return (
     <>
       <View style={styles.container}>
-        <Button
+        {/* <Button
           title="print state"
           onPress={() => {
             recipes.forEach((item: any) =>
@@ -60,7 +60,7 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
             );
             recipesLoad(user);
           }}
-        />
+        /> */}
         <FlatList
           showsVerticalScrollIndicator={false}
           data={
@@ -82,7 +82,7 @@ const RecipesScreen = ({ route, navigation }: RecipesProps) => {
                   ),
                 });
               }}
-              style={styles.listItem}
+              style={[styles.listItem, styles.shadowProp]}
               activeOpacity={1}
             >
               <Text style={styles.title}>{item.name}</Text>
@@ -121,9 +121,17 @@ const styles = StyleSheet.create({
   },
   listItem: {
     alignItems: 'center',
-    borderBottomColor: 'rgb(0,0,200)',
-    borderBottomWidth: 1,
     paddingVertical: 10,
+    backgroundColor: 'white',
+    marginVertical: 10,
+    width: 320,
+    borderRadius: 8,
+  },
+  shadowProp: {
+    shadowColor: '#171717',
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   title: {
     fontSize: 28,
